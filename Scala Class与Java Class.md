@@ -35,7 +35,7 @@ t.sex // error: value sex is not a member of Test
 t.sex = "男" //error: value sex is not a member of Test
 ```
 
-> 题外话，scala的设计思想好像就是"谁好就抄谁，如果他们都相同，我就再造一个"，比如上面class的参数列表的位置，勿喷。
+> 题外话，scala的设计思想好像就是"谁好抄谁，你们都一样，我再造一个"，比如上面class的参数列表的位置，勿喷。
 
 ### 成员的访问修饰符
 scala有三个访问修饰符，默认是public
@@ -118,12 +118,7 @@ t.sex = "男" // error: reassignment to val
 3. case 类的实例的`copy`方法是浅拷贝，可以使用其他copy方法作深拷贝
 
 ### 抽象类、接口和Trait
-scala中也可以定义abstract类，但没有interface，取而代之的是trait。特征作为泛型类型和抽象方法非常有用。
-
-```scala
-
-```
-
+scala中也可以定义abstract类，但没有interface，取而代之的是trait。不好举例，看看官方例子吧，虽然例子也一般
 
 ```scala
 trait Iterator[A] {
@@ -148,3 +143,28 @@ val iterator = new IntIterator(10)
 iterator.next()  // returns 0
 iterator.next()  // returns 1
 ```
+
+### 继承、多态、泛型
+继承就不用说了，extends也用过，就实验一下多态和泛型
+
+#### 多态
+```scala
+class Test{
+  def say(words: String) = {
+      println(words)
+  }
+
+  def say(who: String, words: String){
+    println(s"$who: $words")
+  }
+}
+
+val t = new Test
+t.say("abc") //abc
+t.say("wms", "abc") //wms: abc
+```
+嗯，效果和java一样
+
+#### 泛型
+泛型是吧，scala偏不用`<>`，脑子好使，就造一个`[]`
+
