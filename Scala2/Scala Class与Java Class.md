@@ -168,3 +168,15 @@ t.say("wms", "abc") //wms: abc
 #### 泛型
 泛型是吧，scala偏不用`<>`，脑子好使，就造一个`[]`
 
+> 型变是复杂类型的子类型关系与其组件类型的子类型关系的相关性。 Scala支持 泛型类 的类型参数的型变注释，允许它们是协变的，逆变的，或在没有使用注释的情况下是不变的。 在类型系统中使用型变允许我们在复杂类型之间建立直观的连接，而缺乏型变则会限制类抽象的重用性。
+
+```scala
+class Foo[+A] // A covariant class
+class Bar[-A] // A contravariant class 
+class Baz[A]  // An invariant class
+```
+
+##### 协变
+
+##### 型变
+##### 不变
