@@ -145,7 +145,26 @@ iterator.next()  // returns 1
 ```
 
 ### 继承、多态、泛型
-继承就不用说了，extends也用过，就实验一下多态和泛型
+#### 继承及混入
+一个类只能有一个父类但是可以有多个混入（分别使用关键字extend和with）
+
+#### 自类型
+
+自类型用于声明一个必须混入其他特质的特质但不必extend其他特质时。这样，自类型就实现了缩减`this`。通过`=>`符号实现。
+```scala
+trait User {
+  def username: String
+}
+
+trait Tweeter {
+  def print(x: String)=println(x)
+  this: User =>  // 重新赋予 this 的类型
+  def tweet(tweetText: String) = {
+    println(s"$username: $tweetText")
+    this.print("Tweeter")
+  }
+}
+```
 
 #### 多态
 ```scala
@@ -165,18 +184,55 @@ t.say("wms", "abc") //wms: abc
 ```
 嗯，效果和java一样
 
-#### 泛型
-泛型是吧，scala偏不用`<>`，脑子好使，就造一个`[]`
-
-> 型变是复杂类型的子类型关系与其组件类型的子类型关系的相关性。 Scala支持 泛型类 的类型参数的型变注释，允许它们是协变的，逆变的，或在没有使用注释的情况下是不变的。 在类型系统中使用型变允许我们在复杂类型之间建立直观的连接，而缺乏型变则会限制类抽象的重用性。
-
+#### 泛型和上下界
+**型变**
 ```scala
-class Foo[+A] // A covariant class
-class Bar[-A] // A contravariant class 
-class Baz[A]  // An invariant class
+// 假如X是Y的子类
+class Foo[+A] // 协变covariant，就是允许Foo[X]转化为Foo[Y]
+class Foo[-A] // 逆变contravariant，就是允许Foo[Y]转为Foo[X]
+class Foo[A]  // 不变invariant，就是Foo[X]和Foo[Y]没有任何关系，不可以相互转换
 ```
 
-##### 协变
+**类型upper bound和lower bound**
+```scala
+A <: B  // B is upper bound  
+A >: B  // B is lower boud
+```
 
-##### 型变
-##### 不变
+### 内部类
+Scala的内部类和Java内部类的区别是:每个主类的实例的子类不相同
+```scala
+class Test{
+  class InnerTest{
+    def print(i: InnerTest)={
+        println(i)
+    }
+  }
+}
+
+val t1 = new Test //t: Test = Test@77b0ff24
+val i1 = new t1.InnerTest() //i1: t1.InnerTest = Test$InnerTest@50ac63b2
+val t2 = new Test //t2: Test = Test@67c912d3
+val i2 = new t2.InnerTest() //i2: t2.InnerTest = Test$InnerTest@12922d53
+i1.print(i2) /*
+<console>:28: error: type mismatch;
+ found   : t2.InnerTest
+ required: t.InnerTest
+       i1.print(i2)
+*/
+```
+// 可以通过MainClass#SubClass的方式指定类型，解决该问题，如下：
+```scala
+    def print(i: Test#InnerTest)={
+        println(i)
+    }
+```
+
+### 抽象类
+抽象类可以被直接实例化。
+
+
+### 复合类型
+指定参数类型或者返回类型时可以指定该类型继承于哪些子类
+def abc(x: A with B with C): D with E with F
+> 该特性是因为允许抽象类直接被实例化导致的
